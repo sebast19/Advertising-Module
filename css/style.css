@@ -1,0 +1,23 @@
+div[ class^="content-div-" ] {
+	width: auto;
+	height: auto;
+	position: relative;
+}
+
+#div-container {
+	border: 2px solid lightgray;
+	margin: 0 auto;
+}
+
+#div-container iframe {
+	width: 100%;
+	height: 100%;
+}
+
+.empty-option {
+	text-align: center;
+	font-size: 18px;
+	padding: 20px 10px;
+	box-sizing: border-box;
+	background-color: lightgray;
+}

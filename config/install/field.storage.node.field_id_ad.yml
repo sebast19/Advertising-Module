@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - advertising
+    - node
+  enforced:
+        module:
+            - advertising   
+id: node.field_id_ad
+field_name: field_id_ad
+entity_type: node
+type: entity_reference
+settings:
+  target_type: advertising_entity
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

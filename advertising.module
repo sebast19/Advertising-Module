@@ -1,0 +1,99 @@
+<?php
+
+/**
+ * @file
+ * Contains advertising.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function advertising_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the advertising module.
+    case 'help.page.advertising':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Provides a advertising configuration entity') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+
+/**
+ * Implements hook_form_id_alter().
+ */
+function advertising_form_taxonomy_vocabulary_confirm_delete_alter(&$form, &$form_state, $form_id) {
+  $connection = \Drupal::database();
+
+  $query = $connection->query("SELECT * FROM config  WHERE name LIKE '%advertising.advertising_entity.%'");
+
+  $result = $query->fetchAll();
+
+  $serializer = \Drupal::service('serialization.phpserialize');
+
+  foreach ($result as $key => $entity) {
+    $data[] = $serializer->decode($entity->data);
+
+      if($form['#cache']['tags'][0] == 'config:taxonomy.vocabulary.' .$data[$key]['place']) {
+
+        unset($form['entity_deletes']);
+        unset($form['entity_updates']);
+        $form['actions']['submit']['#disabled'] = TRUE;
+        $form['description']['#markup'] = '<strong>You Can\'t <em>Delete</em> this vocabulary because it\'s in use.</strong>';
+
+      }
+    }
+
+  }
+
+  /**
+   *  Implements hook_preprocess_html()
+   */
+  function advertising_preprocess_html(&$variables) {
+
+    $variables['#attached']['library'][] = 'advertising/advertising-library';
+
+    $result = \Drupal::service('database')
+      ->query(
+        'SELECT data FROM `config` WHERE name LIKE :name ', [':name' => "advertising.advertising_entity.%"]
+      );
+
+    $data_serilized = [];
+    $data_breakpoints = [];
+    $i = 0;
+
+    if(!empty($result)) {
+
+      while($data = $result->fetchAssoc()) {
+
+        $data_serilized[] = \Drupal::service('serialization.phpserialize')->decode($data['data']);
+        $data_breakpoints[] = \Drupal::service('serialization.phpserialize')->decode($data_serilized[$i]['breakpoints']);
+        $i++;
+      }
+
+      $variables['#attached']['drupalSettings']['advertising']['advertisingJS']['data_entity'] = $data_serilized;
+      $variables['#attached']['drupalSettings']['advertising']['advertisingJS']['data_breakpoints'] = $data_breakpoints;
+
+    } else {
+
+      $variables['#attached']['drupalSettings']['advertising']['advertisingJS']['data_entity'] = '';
+      $variables['#attached']['drupalSettings']['advertising']['advertisingJS']['data_breakpoints'] = '';
+
+    }
+
+  }
+
+  /**
+   * Implements hook_preprocess_HOOK() for block.html.twig.
+   */
+  function advertising_preprocess_block(&$variables) {
+    if($variables['derivative_plugin_id']) {
+      //-- This stops the block being cache in drupal 8
+      $variables['#cache']['max-age'] = 0;
+    }
+  }

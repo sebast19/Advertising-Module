@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_breakpoints
+    - node.type.render_banners
+  module:
+    - file
+id: node.render_banners.field_breakpoints
+field_name: field_breakpoints
+entity_type: node
+bundle: render_banners
+label: Breakpoints
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  file_extensions: css
+  max_filesize: ''
+  description_field: false
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: file

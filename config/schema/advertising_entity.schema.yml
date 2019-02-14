@@ -1,0 +1,24 @@
+advertising.advertising_entity.*:
+  type: config_entity
+  label: 'Advertising entity config'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    uuid:
+      type: string
+    url_ad:
+      type: string
+      label: 'Url' 
+    id_ad:
+      type: string
+      label: 'ID of Ad'
+    place:
+      type: string
+      label: 'Place'
+    breakpoints:
+      type: string
+      label: 'Breakpoints'       

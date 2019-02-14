@@ -1,0 +1,14 @@
+{
+  "name": "drupal/advertising",
+  "type": "drupal-module",
+  "description": "Provides a advertising configuration entity",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/advertising",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/advertising",
+    "source": "http://cgit.drupalcode.org/advertising"
+  },
+  "require": { }
+}

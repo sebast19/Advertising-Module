@@ -1,0 +1,5 @@
+name: 'advertising'
+type: module
+description: 'Provides a advertising configuration entity'
+core: 8.x
+package: 'Custom'

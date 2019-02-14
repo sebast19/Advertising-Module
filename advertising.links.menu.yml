@@ -1,0 +1,9 @@
+
+# Advertising entity menu items definition
+entity.advertising_entity.collection:
+  title: 'Advertising entity'
+  route_name: entity.advertising_entity.collection
+  description: 'List Advertising entity (bundles)'
+  parent: system.admin_structure
+  weight: 99
+
