@@ -369,6 +369,7 @@ class AdvertisingEntityForm extends EntityForm {
         ]));
     }
     $form_state->setRedirectUrl($advertising_entity->toUrl('collection'));
+
   }
 
   /**

@@ -74,7 +74,7 @@ class AdvertisingEntityBlock extends DeriverBase implements ContainerDeriverInte
     if(isset($blocks_ids)) {
       foreach ($blocks_ids as $block_id) {
         $this->derivatives[$block_id] = $base_plugin_definition;
-        $this->derivatives[$block_id]['admin_label'] = 'Block: ' . $block_id;
+        $this->derivatives[$block_id]['admin_label'] = 'Block:' . $block_id;
       }
     }
 
