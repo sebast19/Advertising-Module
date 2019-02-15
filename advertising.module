@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\block\Entity\Block;
+use Drupal\advertising\Form\AdvertisingEntityForm;
 
 /**
  * Implements hook_help().
@@ -86,14 +88,70 @@ function advertising_form_taxonomy_vocabulary_confirm_delete_alter(&$form, &$for
 
     }
 
-  }
+    // $result2 = \Drupal::service('database')
+    //   ->query(
+    //     'SELECT data FROM `config` WHERE name LIKE :name ', [':name' => "advertising.advertising_entity.%"]
+    //   )->fetchAssoc();
+    //
+		// $data_serilized2[] = \Drupal::service('serialization.phpserialize')->decode($result2['data']);
+		// $places = [];
+    //
+		// foreach ($data_serilized2 as $blocks) {
+    //
+		// 	if (array_key_exists($blocks['place'], AdvertisingEntityForm::taxonomy_vocabulary_get_names())) {
+		// 		$terms = \Drupal::service('entity_type.manager')->getStorage('taxonomy_term')->loadTree($blocks['place']);
+    //     foreach ($terms as $term) {
+    //       $places[] = "//taxonomy/term//" . $term->tid;
+    //     }
+		// 	}
+    //
+		// 	if (array_key_exists($blocks['place'], AdvertisingEntityForm::content_type_get_names())) {
+    //     $entities = \Drupal::service('entity_type.manager')->getStorage('node')->loadByProperties(['type' => $blocks['place']]);
+    //     foreach ($entities as $entity) {
+    //       $places[] = "//node//" . $entity->id();
+    //     }
+		// 	}
+    //
+    //
+		// 	$ids[] = \Drupal::entityQuery('block')
+		// 		->condition('plugin', 'advertising_block:' . $blocks['id_ad'])
+		// 		->execute();
+    //
+		// 	foreach ($ids[0] as $id) {
+		// 		$ids_blocks[] = $id;
+		// 	}
+    //
+		// 	for ($i = 0; $i < count($ids_blocks); $i++) {
+		// 		$block = \Drupal\block\Entity\Block::load($ids_blocks[$i]);
+    //     $block->setRegion('sidebar_first');
+		// 		$visibility = $block->getVisibility();
+    //
+		// 		if (isset($visibility['request_path']['pages'])) {
+    //       for($i = 0; $i < count($places); $i++) {
+    //         unset($visibility['request_path']['pages']);
+    //         $visibility['request_path']['negate'] = 0;
+    //
+    //         $visibility['request_path']['pages'] = $places[$i];
+    //         $block->setVisibilityConfig('request_path', $visibility['request_path']);
+    //         $block->save();
+    //       }
+		// 		}
+		// 	}
+    //
+    // }
+    //
+    // $block = Block::load('blockvim001');
+    // $block->setRegion('sidebar_first');
+    //
+    // $visibility = $block->getVisibility();
+    //
+    // if (isset($visibility['request_path']['pages']))
+    // {
+    //    unset($visibility['request_path']['pages']);
+    //    $visibility['request_path']['negate'] = 0;
+    //    $visibility['request_path']['pages'] = '/production/simpsons';
+    //    $block->setVisibilityConfig('request_path', $visibility['request_path']);
+    //    $block->save();
+    // }
 
-  /**
-   * Implements hook_preprocess_HOOK() for block.html.twig.
-   */
-  function advertising_preprocess_block(&$variables) {
-    if($variables['derivative_plugin_id']) {
-      //-- This stops the block being cache in drupal 8
-      $variables['#cache']['max-age'] = 0;
-    }
   }

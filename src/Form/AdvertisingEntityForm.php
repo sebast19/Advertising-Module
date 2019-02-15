@@ -26,10 +26,10 @@ class AdvertisingEntityForm extends EntityForm {
 
   /**
    * Class construct
-   * 
+   *
    * @param $entity_type Drupal\Core\Entity\EntityTypeManager
    *  The entity type manager
-   * 
+   *
    * @param $connection Drupal\Core\Database\Connection
    *  The connection to database
    */
@@ -61,7 +61,7 @@ class AdvertisingEntityForm extends EntityForm {
 
     // Disable caching for the form
     $form['#cache'] = ['max-age' => 0];
-    
+
     // Do not flatten nested form fields
     $form['#tree'] = TRUE;
 
@@ -106,8 +106,8 @@ class AdvertisingEntityForm extends EntityForm {
       ],
     ];
 
-    $data_taxonomy = $this->taxonomy_vocabulary_get_names();
-    $data_content_type = $this->content_type_get_names();
+    $data_taxonomy = self::taxonomy_vocabulary_get_names();
+    $data_content_type = self::content_type_get_names();
 
     $form['place'] = [
       '#type' => 'select',
@@ -129,11 +129,11 @@ class AdvertisingEntityForm extends EntityForm {
       '#prefix' => '<div id="breakpoint-wrapper">',
       '#suffix' => '</div>',
     ];
-    
+
     $breakpoints_data = $advertising_entity->getBreakpoints();
     $set_breakpoints = [];
 
-    for ($i = 0; $i < count($breakpoints_data['form']); $i++) { 
+    for ($i = 0; $i < count($breakpoints_data['form']); $i++) {
       $set_breakpoints[] = $i;
     }
 
@@ -150,25 +150,25 @@ class AdvertisingEntityForm extends EntityForm {
         '#title' => $this->t('Option #' . $field ),
         '#tree' => TRUE,
       ];
-  
+
       $form['breakpoints']['form'][$field]['width'] = [
         '#type' => 'number',
-        '#title' => 'Width',  
+        '#title' => 'Width',
         '#min' => 1,
         '#required' => TRUE,
         '#default_value' => $breakpoints_data['form'][$field]['width'],
         '#description' => $this->t('The width in px.'),
       ];
-  
+
       $form['breakpoints']['form'][$field]['height'] = [
         '#type' => 'number',
-        '#title' => 'height', 
+        '#title' => 'height',
         '#min' => 1,
         '#required' => TRUE,
         '#default_value' => $breakpoints_data['form'][$field]['height'],
         '#description' => $this->t('The height in px.'),
       ];
-  
+
       $form['breakpoints']['form'][$field]['remove'] = [
         '#type' => 'submit',
         '#value' => $this->t('Remove'),
@@ -192,15 +192,15 @@ class AdvertisingEntityForm extends EntityForm {
       ],
     ];
 
-    
+
     return $form;
 
-    
+
   }
 
   /**
    * function to add one field of breakpoint.
-   * 
+   *
    * @param array $form
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    */
@@ -208,19 +208,19 @@ class AdvertisingEntityForm extends EntityForm {
 
 		// Get the triggering item
     $delta_remove = $form_state->getTriggeringElement()['#parents'][2];
-    
+
     // Store our form state
     $field_deltas_array = $form_state->get('field_deltas');
-    
+
     // Find the key of the item we need to remove
     $key_to_remove = array_search($delta_remove, $field_deltas_array);
-    
+
     // Remove our triggered element
     unset($field_deltas_array[$key_to_remove]);
-    
+
     // Rebuild the field deltas values
     $form_state->set('field_deltas', $field_deltas_array);
-    
+
     // Rebuild the form
     $form_state->setRebuild();
     return $this->messenger()->addMessage($this->t('The BreakPoint has been remove'), 'warning');
@@ -229,7 +229,7 @@ class AdvertisingEntityForm extends EntityForm {
 
   /**
    * ajax callback to add the new field to the render form.
-   * 
+   *
    * @param array $form
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *
@@ -250,7 +250,7 @@ class AdvertisingEntityForm extends EntityForm {
 
     // Store our form state
     $field_deltas_array = $form_state->get('field_deltas');
-    
+
     // check to see if there is more than one item in our array
     if (count($field_deltas_array) > 0) {
       // Add a new element to our array and set it to our highest value plus one
@@ -260,15 +260,15 @@ class AdvertisingEntityForm extends EntityForm {
       // Set the new array element to 0
       $field_deltas_array[] = 0;
     }
-  
+
     // Rebuild the field deltas values
     $form_state->set('field_deltas', $field_deltas_array);
-  
+
     // Rebuild the form
     $form_state->setRebuild();
-    
+
   }
-  
+
   /**
    * @param array $form
    * @param \Drupal\Core\Form\FormStateInterface $form_state
@@ -333,13 +333,13 @@ class AdvertisingEntityForm extends EntityForm {
     if (!preg_match('/^[a-z0-9]{6}$/', $value)){
       $form_state->setError($element, t('Please. Write only data type string. Three Numbers and three characters (WXY457)'));
     }
-  }  
+  }
 
   /**
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    
+
     $advertising_entity = $this->entity;
     $form_values = $form_state->getValue('breakpoints', 'form');
     $count = 0;
@@ -350,12 +350,12 @@ class AdvertisingEntityForm extends EntityForm {
         $value_breakpoints['form'][$count]['width'] = $form_values['form'][$key]['width'];
         $value_breakpoints['form'][$count]['height'] = $form_values['form'][$key]['height'];
         $count++;
-      }     
+      }
     }
-    
+
     $advertising_entity->setBreakpoints($value_breakpoints);
     $status = $advertising_entity->save();
-    
+
     switch ($status) {
       case SAVED_NEW:
         $this->messenger()->addMessage($this->t('Created the %label Advertising entity.', [
@@ -369,15 +369,15 @@ class AdvertisingEntityForm extends EntityForm {
         ]));
     }
     $form_state->setRedirectUrl($advertising_entity->toUrl('collection'));
-
+    drupal_flush_all_caches();
   }
 
   /**
    * Get names for all taxonomy vocabularies.
-   * 
+   *
    * @return array array A list of existing vocabulary IDs.
    */
-  public function taxonomy_vocabulary_get_names() {
+  public static function taxonomy_vocabulary_get_names() {
     $names =& drupal_static(__FUNCTION__);
     if (!isset($names)) {
       $names = [];
@@ -393,10 +393,10 @@ class AdvertisingEntityForm extends EntityForm {
 
   /**
    * Get names for all content types.
-   * 
+   *
    * @return array array A list of existing content types IDs.
    */
-  public function content_type_get_names() {
+  public static function content_type_get_names() {
     $names =& drupal_static(__FUNCTION__);
     if (!isset($names)) {
       $names = [];
@@ -405,7 +405,7 @@ class AdvertisingEntityForm extends EntityForm {
       foreach ($config_names as $config_name) {
         $id = substr($config_name, strlen('node_type.'));
         $names[$id] = entity_load('node_type', $id)->label();
-        
+
       }
     }
     return $names;
